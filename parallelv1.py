@@ -8,23 +8,30 @@
 
 from optparse import OptionParser
 import numpy as np
-from multiprocessing import Queue, Process
+from multiprocessing import Process
 import time
 from matrix_multiplication import multiplication
 
 
-def control_algebraic_property(dimension, constant, idx, result_queue):
-    # generate random matrix of size n * n
+def control_algebraic_property(dimension, constant, idx):
+    """
+    Generation of random matrix
+    :param dimension: dimension of the matrix to be generated
+    :param constant: scalar constant for computing the second matrix
+    :param idx: index of the matrices
+    """
+    # Generation of random matrix of size n * n
     matrix_a = np.random.randint(low=-100, high=100, size=(dimension, dimension), dtype=int)
-    # compute matrix b
+    # Computation of matrix b
     matrix_b = constant * matrix_a
-    # compare matrix product
+    # Computation of matrix products
     product1 = multiplication(matrix_a, matrix_b)
     product2 = multiplication(matrix_b, matrix_a)
+    # Comparison between matrix products
     if np.array_equal(product1, product2):
-        result_queue.put("The hypothesis A{j}B{j} = B{j}A{j} is verified".format(j=idx+1))
+        print("The hypothesis A{j}B{j} = B{j}A{j} is verified".format(j=idx+1))
     else:
-        result_queue.put("A{j}B{j} is not equal to B{j}A{j}".format(j=idx+1))
+        print("A{j}B{j} is not equal to B{j}A{j}".format(j=idx+1))
 
 
 if __name__ == '__main__':
@@ -40,23 +47,17 @@ if __name__ == '__main__':
     c = options.c
 
     start = time.time()
-    # Initializing the number of hypothesis to verify
+    # Initialize the number of hypothesis to verify
     num = 10
 
-    # Initialize empty queues
-    result = Queue(maxsize=num)
-
     # Create workers
-    workers = [Process(target=control_algebraic_property, args=(n, c, i, result)) for i in range(num)]
+    workers = [Process(target=control_algebraic_property, args=(n, c, i)) for i in range(num)]
     for worker in workers:
         worker.start()
 
+    # Join workers
     for worker in workers:
         worker.join()
-        worker.close()
-
-    for i in range(num):
-        print(result.get())
 
     end = time.time()
     print(f"The parallel algorithm with 10 processes took {end - start} seconds")

@@ -13,21 +13,37 @@ import time
 from matrix_multiplication import multiplication
 
 
-def generate_random_matrix(queue_A, constant, dimension):
+def generate_random_matrix(queue, constant, dimension):
+    """
+    Generation of random matrix
+    :param queue: queue of generated matrices
+    :param constant: scalar constant for computing the second matrix
+    :param dimension: dimension of the matrix to be generated
+    """
     # generate random matrix of size dimension * dimension
     matrix_a = np.random.randint(low=-100, high=100, size=(dimension, dimension), dtype=int)
     matrix_b = constant * matrix_a
-    queue_A.put((matrix_a, matrix_b))
+    queue.put((matrix_a, matrix_b))
 
 
-def compute_first_product(queue_A, queue_B):
-    (matrix_a, matrix_b) = queue_A.get(block=True, timeout=None)
+def compute_first_product(queue, queue_product):
+    """
+    Computation of first product
+    :param queue: queue of generated matrices
+    :param queue_product: queue of first product
+    """
+    (matrix_a, matrix_b) = queue.get(block=True, timeout=None)
     product_1 = multiplication(matrix_a, matrix_b)
-    queue_B.put((matrix_a, matrix_b, product_1))
+    queue_product.put((matrix_a, matrix_b, product_1))
 
 
-def check_algebraic_property(queue_B, idx):
-    (matrix_a, matrix_b, product_1) = queue_B.get(block=True, timeout=None)
+def check_algebraic_property(queue_product, idx):
+    """
+    Computation of second product and control of the equality
+    :param queue_product: queue of first product
+    :param idx: index of the matrices
+    """
+    (matrix_a, matrix_b, product_1) = queue_product.get(block=True, timeout=None)
     product_2 = multiplication(matrix_b, matrix_a)
     if np.array_equal(product_1, product_2):
         print("The hypothesis A{j}B{j} = B{j}A{j} is verified".format(j=idx+1))
@@ -50,25 +66,30 @@ if __name__ == '__main__':
     start = time.time()
     # Initializing the number of hypothesis to verify
     num = 10
-    process = 10
-    m = Manager()
+    # Initializing the number of processes for each pool
+    process = 4
 
+    # Initializing queues
+    m = Manager()
     matrices_a = m.Queue(maxsize=num)
     products_1 = m.Queue(maxsize=num)
 
+    # Initializing arguments
     args1 = [(matrices_a, c, n) for _ in range(num)]
     args2 = [(matrices_a, products_1) for _ in range(num)]
     args3 = [(products_1, i) for i in range(num)]
 
-    # Create pools
+    # Creating pools
     p1 = Pool(process)
     p2 = Pool(process)
     p3 = Pool(process)
 
+    # Assigning functions to pools
     p1.starmap(generate_random_matrix, args1)
     p2.starmap(compute_first_product, args2)
     p3.starmap(check_algebraic_property, args3)
 
+    # Closing and Joining pools
     p1.close()
     p2.close()
     p3.close()

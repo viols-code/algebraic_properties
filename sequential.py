@@ -29,13 +29,14 @@ if __name__ == '__main__':
 
     """ Verifying experimentally the hypothesis """
     for i in range(num):
-        # generate random matrix of size n * n
+        # Generate random matrix of size n * n
         matrix_a = np.random.randint(low=-100, high=100, size=(n, n), dtype=int)
-        # compute matrix b
+        # Compute matrix b
         matrix_b = c * matrix_a
-        # compare matrix product
+        # Compute matrix products
         product1 = multiplication(matrix_a, matrix_b)
         product2 = multiplication(matrix_b, matrix_a)
+        # Compare matrix products
         if np.array_equal(product1, product2):
             print("The hypothesis A{j}B{j} = B{j}A{j} is verified".format(j=i+1))
         else:

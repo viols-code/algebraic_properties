@@ -30,7 +30,7 @@ not a valid solution, as some processes will be unused.
 Three different algorithms were implemented:
 - a sequential algorithm (sequential.py);
 - a parallel algorithm that uses ten processes (parallelv1.py);
-- a parallel algorithm that uses three pools of ten processes each (parallel.py).
+- a parallel algorithm that uses three pools of four processes each (parallel.py).
 
 A matrix multiplication function was also implemented, since the numpy.dot() function is already parallelized.
 Using an implementation of the matrix multiplication helps better understand the difference in the execution time 
@@ -52,18 +52,17 @@ In order see the possible options, open a terminal, cd into project directory an
    ```bash
    python name_algorithm --help 
    ```
-For example:
+   For example:
    ```bash
    python sequential.py --help
    ```
 
-3. **Standard benchmark simulation.**  
-By default, main.py runs a vascular network which represents the Circle of Willis.
-Open a terminal cd into project directory and type:
+3. **Standard benchmark simulation.**
+Open a terminal into project directory and type:
    ```bash
    python name_algorithm -n N -c c
    ```
-For example:
+   For example:
    ```bash
    python sequential.py -n 100 -c 12
    ```
