@@ -32,7 +32,7 @@ Three different algorithms were implemented:
 - a parallel algorithm that uses ten processes (parallelv1.py);
 - a parallel algorithm that uses three pools of four processes each (parallel.py).
 
-A matrix multiplication function was also implemented, since the numpy.dot() function is already parallelized.
+A matrix multiplication function was also implemented, since the numpy.matmul() function is already parallelized.
 Using an implementation of the matrix multiplication helps better understand the difference in the execution time 
 between the three algorithms. Since creating processes costs time, to see an improvement in the execution time using 
 multiprocessing, it is necessary that N is large enough.
