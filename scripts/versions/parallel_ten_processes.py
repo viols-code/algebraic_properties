@@ -1,12 +1,5 @@
-# PROJECT 8
-# Project name: Algebraic Properties
-# Short description: Usually, given two square matrices A and B it is not true that AB = BA.
-# However, if B=cA, where c is a scalar, then AB=BA.
-# The goal is to implement an algorithm for testing experimentally such hypothesis.
-
 # PARALLEL ALGORITHM WITH 10 PROCESSES
 
-from optparse import OptionParser
 import numpy as np
 from multiprocessing import Process
 import time
