@@ -10,7 +10,7 @@ from optparse import OptionParser
 import numpy as np
 from multiprocessing import Process
 import time
-from matrix_multiplication import multiplication
+from .utils import matrix_multiplication
 
 
 def control_algebraic_property(dimension, constant, idx):
@@ -25,8 +25,8 @@ def control_algebraic_property(dimension, constant, idx):
     # Computation of matrix b
     matrix_b = constant * matrix_a
     # Computation of matrix products
-    product1 = multiplication(matrix_a, matrix_b)
-    product2 = multiplication(matrix_b, matrix_a)
+    product1 = matrix_multiplication(matrix_a, matrix_b)
+    product2 = matrix_multiplication(matrix_b, matrix_a)
     # Comparison between matrix products
     if np.array_equal(product1, product2):
         print("The hypothesis A{j}B{j} = B{j}A{j} is verified".format(j=idx+1))
@@ -34,21 +34,8 @@ def control_algebraic_property(dimension, constant, idx):
         print("A{j}B{j} is not equal to B{j}A{j}".format(j=idx+1))
 
 
-if __name__ == '__main__':
-    parser = OptionParser()
-
-    """ Adding all the options that can be given as parameters """
-    parser.add_option("-n", action="store", dest='n', type='int', help="Dimension of the matrices")
-    parser.add_option("-c", action="store", dest='c', type='int', help="Scalar constant c")
-
-    """ Reading the arguments """
-    (options, args) = parser.parse_args()
-    n = options.n
-    c = options.c
-
+def parallel_ten_processes_strategy(n, c, num):
     start = time.time()
-    # Initialize the number of hypothesis to verify
-    num = 10
 
     # Create workers
     workers = [Process(target=control_algebraic_property, args=(n, c, i)) for i in range(num)]

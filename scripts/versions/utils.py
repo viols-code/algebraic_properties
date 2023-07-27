@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def multiplication(matrix_1, matrix_2):
+def matrix_multiplication(matrix_1, matrix_2):
     """
     Multiplication between two two-dimensional matrices
     :param matrix_1: first matrix
@@ -10,8 +10,7 @@ def multiplication(matrix_1, matrix_2):
     """
     # Controls if shape of the matrices is compatible with multiplication
     if matrix_1.shape[1] != matrix_2.shape[0]:
-        print("Error: the two matrices cannot be multiplied")
-        return
+        raise Exception("Error: the two matrices cannot be multiplied")
     # Computing the multiplication
     new_matrix = np.zeros((matrix_1.shape[0], matrix_2.shape[1]))
     for i in range(matrix_1.shape[0]):

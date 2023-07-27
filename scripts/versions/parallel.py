@@ -1,16 +1,9 @@
-# PROJECT 8
-# Project name: Algebraic Properties
-# Short description: Usually, given two square matrices A and B it is not true that AB = BA.
-# However, if B=cA, where c is a scalar, then AB=BA.
-# The goal is to implement an algorithm for testing experimentally such hypotheses
-
 # PARALLEL ALGORITHM WITH MORE THAN 10 PROCESSES
 
-from optparse import OptionParser
-import numpy as np
-from multiprocessing import Manager, Pool
 import time
-from matrix_multiplication import multiplication
+from multiprocessing import Manager, Pool
+import numpy as np
+from .utils import matrix_multiplication
 
 
 def generate_random_matrix(queue, constant, dimension):
@@ -33,7 +26,7 @@ def compute_first_product(queue, queue_product):
     :param queue_product: queue of first product
     """
     (matrix_a, matrix_b) = queue.get(block=True, timeout=None)
-    product_1 = multiplication(matrix_a, matrix_b)
+    product_1 = matrix_multiplication(matrix_a, matrix_b)
     queue_product.put((matrix_a, matrix_b, product_1))
 
 
@@ -44,30 +37,16 @@ def check_algebraic_property(queue_product, idx):
     :param idx: index of the matrices
     """
     (matrix_a, matrix_b, product_1) = queue_product.get(block=True, timeout=None)
-    product_2 = multiplication(matrix_b, matrix_a)
+    product_2 = matrix_multiplication(matrix_b, matrix_a)
     if np.array_equal(product_1, product_2):
         print("The hypothesis A{j}B{j} = B{j}A{j} is verified".format(j=idx+1))
     else:
         print("A{j}B{j} is not equal to B{j}A{j}".format(j=idx+1))
 
 
-if __name__ == '__main__':
-    parser = OptionParser()
-
-    """ Adding all the options that can be given as parameters """
-    parser.add_option("-n", action="store", dest='n', type='int', help="Dimension of the matrices")
-    parser.add_option("-c", action="store", dest='c', type='int', help="Scalar constant c")
-
-    """ Reading the arguments """
-    (options, args) = parser.parse_args()
-    n = options.n
-    c = options.c
-
+def parallel_strategy(n, c, num):
     start = time.time()
-    # Initializing the number of hypothesis to verify
-    num = 10
-    # Initializing the number of processes for each pool
-    process = 4
+    process = 5
 
     # Initializing queues
     m = Manager()
