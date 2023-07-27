@@ -28,16 +28,16 @@ not a valid solution, as some processes will be unused.
 
 ## Implementation
 Three different algorithms were implemented:
-- a sequential algorithm (sequential.py);
-- a parallel algorithm that uses ten processes (parallelv1.py);
-- a parallel algorithm that uses three pools of four processes each (parallel.py).
+- a sequential algorithm;
+- a parallel algorithm that uses ten processes;
+- a parallel algorithm that uses three pools of five processes each.
 
 A matrix multiplication function was also implemented, since the numpy.matmul() function is already parallelized.
 Using an implementation of the matrix multiplication helps better understand the difference in the execution time 
 between the three algorithms. Since creating processes costs time, to see an improvement in the execution time using 
 multiprocessing, it is necessary that N is large enough.
 
-A test program was implemented, in order to visualize the differences between the three algorithms.
+Also some unit tests have been implemented, mainly to verify the correctness of the matrix_multiplication function.
 
 ## Usage
 
@@ -50,19 +50,17 @@ A test program was implemented, in order to visualize the differences between th
 2. **Add options.**  
 In order see the possible options, open a terminal, cd into project directory and type:
    ```bash
-   python name_algorithm --help 
-   ```
-   For example:
-   ```bash
-   python sequential.py --help
+   python scripts/main.py --help 
    ```
 
 3. **Standard benchmark simulation.**
 Open a terminal into project directory and type:
    ```bash
-   python name_algorithm -n N -c c
+   python scripts/main.py -n N -c c -a algorithm
    ```
-   For example:
+   
+4. **Tests.**
+Open a terminal into project directory and type:
    ```bash
-   python sequential.py -n 100 -c 12
+    python -m unittest -v
    ```
