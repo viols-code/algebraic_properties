@@ -37,7 +37,7 @@ Using an implementation of the matrix multiplication helps better understand the
 between the three algorithms. Since creating processes costs time, to see an improvement in the execution time using 
 multiprocessing, it is necessary that N is large enough.
 
-Also some unit tests have been implemented, mainly to verify the correctness of the matrix_multiplication function.
+Also, some unit tests have been implemented, mainly to verify the correctness of the matrix_multiplication function.
 
 ## Usage
 

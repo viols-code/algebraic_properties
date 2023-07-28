@@ -5,7 +5,8 @@ from unittest.mock import patch
 
 import numpy as np
 
-from scripts.versions.parallel import generate_random_matrix, compute_first_product, check_algebraic_property
+from scripts.versions.parallel import generate_random_matrix, compute_first_product, check_algebraic_property, \
+    parallel_strategy
 
 
 class TestParallelAlgorithm(unittest.TestCase):
@@ -40,7 +41,7 @@ class TestParallelAlgorithm(unittest.TestCase):
         product = np.matmul(matrix_a, matrix_b)
         queue_product.put((matrix_a, matrix_b, product))
         check_algebraic_property(queue_product, idx)
-        self.assertEqual(mock_stdout.getvalue(), "The hypothesis A{j}B{j} = B{j}A{j} is verified\n".format(j=idx+1))
+        self.assertEqual(mock_stdout.getvalue(), "The hypothesis A{j}B{j} = B{j}A{j} is verified\n".format(j=idx + 1))
 
     @patch('sys.stdout', new_callable=io.StringIO)
     def test_check_algebraic_property_false(self, mock_stdout):
@@ -54,7 +55,15 @@ class TestParallelAlgorithm(unittest.TestCase):
         product = np.matmul(matrix_a, matrix_2)
         queue_product.put((matrix_a, matrix_b, product))
         check_algebraic_property(queue_product, idx)
-        self.assertEqual(mock_stdout.getvalue(), "A{j}B{j} is not equal to B{j}A{j}\n".format(j=idx+1))
+        self.assertEqual(mock_stdout.getvalue(), "A{j}B{j} is not equal to B{j}A{j}\n".format(j=idx + 1))
+
+    @patch('sys.stdout', new_callable=io.StringIO)
+    def test_parallel_strategy(self, mock_stdout):
+        num = 1
+        c = 2
+        n = 25
+        parallel_strategy(n, c, num)
+        self.assertEqual(mock_stdout.getvalue()[:55], "The parallel algorithm with more than 10 processes took")
 
 
 if __name__ == '__main__':
